@@ -13,14 +13,17 @@ Se o SmartScreen avisar (app sem assinatura): *Mais informações → Executar a
 clique direito → *Abrir* → *Abrir*. Na 1ª vez, permita **“encontrar dispositivos na rede local”**.
 Não precisa de permissão de microfone/gravação de tela.
 
-## Usar
-1. Abra o AudioBridge no Windows e no Mac (mesma rede Wi-Fi/cabo; sem internet necessária).
-2. No Mac, o PC aparece sozinho e conecta automaticamente (ou clique **Conectar**).
-3. No Windows, clique **Iniciar transmissão**.
-4. Tudo que toca no Windows sai no alto-falante/fone atual do Mac. Volume no slider do Mac.
+## Usar (versão 1.1: tudo automático)
+Abra o AudioBridge uma vez em cada aparelho. Dali em diante:
+- **Windows:** começa a transmitir sozinho e fica na bandeja (ícones ocultos, perto do relógio). Inicia junto com o Windows.
+  Fechar a janela só esconde; para **encerrar de verdade**: botão direito no ícone → **Encerrar**. Clique no ícone para abrir a janela.
+- **Mac:** conecta sozinho ao PC e toca o áudio. Inicia junto com o Mac, sem janela e sem ícone no Dock.
+  Fechar a janela (bolinha vermelha) mantém tudo rodando em segundo plano. Para abrir a janela de novo, abra o app AudioBridge.
+  Para encerrar de vez: abra a janela e use Cmd+Q.
+- Os dois lados têm a caixa “Abrir ao ligar…” para desativar o início automático.
 
-O Mac segue a saída de áudio padrão (trocou de fone, o som acompanha). O Windows captura a saída padrão dele.
-Dica: no Windows, deixe a saída em 48000 Hz (Som → Propriedades → Avançado) e use Wi-Fi 5 GHz ou cabo.
+Tudo que toca no Windows sai no alto-falante/fone atual do Mac; volume no slider do Mac.
+Dica: no Windows, deixe a saída em 48000 Hz e use Wi-Fi 5 GHz ou cabo.
 
 ## Como funciona
 Windows: WASAPI loopback → Opus 160 kbps, quadros de 10 ms, estéreo 48 kHz → UDP.

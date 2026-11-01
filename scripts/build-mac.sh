@@ -21,6 +21,7 @@ cat > "$APP/Contents/Info.plist" <<PL
  <key>CFBundleShortVersionString</key><string>1.0</string>
  <key>LSMinimumSystemVersion</key><string>15.0</string>
  <key>NSHighResolutionCapable</key><true/>
+ <key>LSUIElement</key><true/>
  <key>NSLocalNetworkUsageDescription</key><string>O AudioBridge encontra o PC com Windows na sua rede local para receber o áudio.</string>
  <key>NSBonjourServices</key><array><string>_abridge._udp</string><string>_abridgerx._udp</string></array>
 </dict></plist>
