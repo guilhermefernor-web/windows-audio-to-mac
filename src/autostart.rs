@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 
-fn prefs_dir() -> Option<PathBuf> {
+pub(crate) fn prefs_dir() -> Option<PathBuf> {
     #[cfg(target_os = "macos")]
     let base = std::env::var_os("HOME").map(|h| PathBuf::from(h).join("Library/Application Support"));
     #[cfg(windows)]

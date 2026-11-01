@@ -15,7 +15,7 @@ Download both files from the [latest release](../../releases/latest).
 
 **Windows 10/11 (x64)** — `AudioBridge-Windows.zip`
 1. Unzip and run `AudioBridge.exe`.
-2. When Windows Firewall asks, allow access on **Private networks**.
+2. On first run Windows asks for administrator permission (UAC) to add a Firewall rule for the app. Accept it; without it the Mac can't reach the PC.
 3. SmartScreen may warn because the app is not code-signed: *More info → Run anyway*.
 
 **macOS 15+ (Apple Silicon)** — `AudioBridge-Mac.zip`

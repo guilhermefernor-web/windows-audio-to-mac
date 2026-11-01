@@ -112,6 +112,7 @@ fn main() -> eframe::Result {
         return Ok(());
     }
     audiobridge::autostart::init();
+    audiobridge::firewall::ensure_rule();
     let tx = Sender::new().expect("não foi possível abrir a rede");
     tx.start(); // automatic: stream as soon as the app opens; the Mac connects by itself
     let ip = audiobridge::proto::local_ip();

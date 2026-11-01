@@ -1,6 +1,7 @@
 pub mod autostart;
 pub mod convert;
 pub mod discovery;
+pub mod firewall;
 pub mod proto;
 pub mod receiver;
 pub mod sender;

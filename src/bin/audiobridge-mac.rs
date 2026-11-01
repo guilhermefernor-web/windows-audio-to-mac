@@ -18,13 +18,14 @@ struct App {
     wanted: Option<String>,
     autostart: bool,
     searching_since: Option<Instant>,
+    retry: usize,
 }
 
 impl App {
     fn new() -> Self {
         let rx = Receiver::new().expect("receiver");
         let disc = Discovery::start(rx.name(), proto::SERVICE_RX, rx.port, proto::SERVICE_SRC).ok();
-        Self { rx, disc, selected: 0, volume: 0.8, manual_off: false, manual_ip: String::new(), wanted: None, autostart: audiobridge::autostart::is_enabled(), searching_since: None }
+        Self { rx, disc, selected: 0, volume: 0.8, manual_off: false, manual_ip: String::new(), wanted: None, autostart: audiobridge::autostart::is_enabled(), searching_since: None, retry: 0 }
     }
 }
 
@@ -44,7 +45,7 @@ impl eframe::App for App {
         if st.link == Link::Idle && !self.manual_off {
             let pick = match &self.wanted {
                 Some(n) => peers.iter().find(|p| &p.name == n),
-                None if peers.len() == 1 => peers.first(),
+                None if peers.iter().all(|p| p.name == peers[0].name) => peers.first(),
                 None => None,
             };
             if let Some(p) = pick {
@@ -53,18 +54,21 @@ impl eframe::App for App {
             }
         }
 
-        // The PC may have come back with another address (DHCP): follow it.
+        // No answer: the PC may have a new address, or several stale entries share its name. Try the next one.
         if st.link == Link::Searching {
             let since = *self.searching_since.get_or_insert_with(Instant::now);
-            if since.elapsed() > Duration::from_secs(5) {
-                if let Some(p) = self.wanted.as_ref().and_then(|n| peers.iter().find(|p| &p.name == n)) {
-                    self.rx.connect(p.addr);
-                    self.searching_since = None;
+            if since.elapsed() > Duration::from_secs(4) {
+                let same: Vec<_> = peers.iter().filter(|p| Some(&p.name) == self.wanted.as_ref()).collect();
+                if !same.is_empty() {
+                    self.retry += 1;
+                    self.rx.connect(same[self.retry % same.len()].addr);
                 }
+                self.searching_since = Some(Instant::now());
             }
         } else {
             self.searching_since = None;
         }
+        let stuck = st.link == Link::Searching && self.searching_since.is_some_and(|t| t.elapsed() > Duration::from_secs(2)) && self.retry > 0;
 
         let (dot, text) = match st.link {
             Link::Idle if peers.is_empty() => (egui::Color32::GRAY, "Procurando o PC com Windows…".to_string()),
@@ -85,6 +89,9 @@ impl eframe::App for App {
                 ui.colored_label(dot, "●");
                 ui.label(text);
             });
+            if stuck {
+                ui.weak("Sem resposta do PC. No Windows, permita o AudioBridge no Firewall (redes privadas).");
+            }
             if let Some(e) = &st.error {
                 ui.colored_label(egui::Color32::from_rgb(210, 70, 70), e);
             }
