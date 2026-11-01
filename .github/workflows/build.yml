@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release --bin audiobridge-windows
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AudioBridge-Windows
+          path: target/release/audiobridge-windows.exe
+
+  mac:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+      - uses: Swatinem/rust-cache@v2
+      - run: ./scripts/build-mac.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AudioBridge-Mac
+          path: dist/AudioBridge-Mac.zip
